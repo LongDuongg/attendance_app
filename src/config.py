@@ -9,7 +9,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
 # Connect to the database
-SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@localhost:3306/recog_system'
+SQLALCHEMY_DATABASE_URI = (
+    "mysql+mysqlconnector://root:123456@localhost:3306/recog_system"
+)
 
 # Turn off the Flask-SQLAlchemy event system and warning
 SQLALCHEMY_TRACK_MODIFICATIONS = False
