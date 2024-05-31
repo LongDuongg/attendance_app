@@ -2,9 +2,7 @@
 
 ### create environment (run only first time)
 
-`conda create -n attendance-app`
-
-### conda install and pip install
+`conda env create --file environment.yml`
 
 ### activate environment
 
