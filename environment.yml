@@ -2,13 +2,14 @@ name: attendance-app
 channels:
   - conda-forge
 dependencies:
-  - python=3.10.14
-  - flask=2.2.5
-  - keras=2.10.0
-  - flask_sqlalchemy=3.0.3
-  - tensorflow=2.10.0
-  - pymysql=1.0.2
-  - mysql-connector-python=8.0.32
-  # pip install
-  - opencv-python=4.9.0
-  - opencv-contrib-python=4.9.0
+  - python
+  - flask
+  - keras
+  - tensorflow
+  - pymysql
+  - mysql-connector-python
+  - pip
+  - pip:
+      - opencv-python
+      - opencv-contrib-python
+      - flask_sqlalchemy
