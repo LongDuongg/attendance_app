@@ -24,11 +24,11 @@
         // The http vs. https is important. Use http for localhost!
         socket = io.connect("http://" + document.domain + ":" + location.port);
 
-        const interval = setInterval(() => {
-          socket.emit("send_message", { "text": "aaa" });
-        }, 1000);
+        // const interval = setInterval(() => {
+        //   socket.emit("send_message", { "text": "aaa" });
+        // }, 1000);
 
-        // Message recieved from server
+        // Message received from server
         socket.on("message_from_server", function (data) {
           let text = data["text"];
           document.getElementById("chat").innerHTML +=
