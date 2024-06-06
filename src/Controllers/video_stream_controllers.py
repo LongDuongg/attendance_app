@@ -9,8 +9,8 @@ from recognition_models.recognition_models import FACE_DETECTION_MODEL, FACE_CLS
 from Models.mock_data import STUDENTS
 
 
-video_stream_Controller = Blueprint(
-    "video_stream_Controller", __name__, template_folder="../Views"
+video_stream_controller = Blueprint(
+    "video_stream_controller", __name__, template_folder="../Views"
 )
 
 
@@ -118,11 +118,11 @@ def stream():
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
 
 
-@video_stream_Controller.route("/index")
+@video_stream_controller.route("/index")
 def index():
     return render_template("index.html", data=STUDENTS)
 
 
-@video_stream_Controller.route("/video")
+@video_stream_controller.route("/video")
 def video():
     return Response(stream(), mimetype="multipart/x-mixed-replace; boundary=frame")

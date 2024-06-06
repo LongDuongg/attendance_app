@@ -2,7 +2,7 @@ from flask import Flask
 from flask_socketio import *
 
 # from Models.models import db
-from Controllers.video_stream_controllers import video_stream_Controller
+from Controllers.video_stream_controllers import video_stream_controller
 
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ socketio = SocketIO(app, logger=True)
 #   db.create_all()
 
 # Register blueprint routes
-app.register_blueprint(video_stream_Controller, url_prefix="/")
+app.register_blueprint(video_stream_controller, url_prefix="/")
 
 
 # Receive a message from the front end HTML
