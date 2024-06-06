@@ -7,6 +7,36 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='style/style.css') }}"
     />
+
+    <script
+      type="text/javascript"
+      src="//code.jquery.com/jquery-3.7.1.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"
+    ></script>
+
+    <!-- Script to handle socket.io -->
+    <script>
+      let socket;
+      $(document).ready(function () {
+        // The http vs. https is important. Use http for localhost!
+        socket = io.connect("http://" + document.domain + ":" + location.port);
+
+        const interval = setInterval(() => {
+          socket.emit("send_message", { "text": "aaa" });
+        }, 1000);
+
+        // Message recieved from server
+        socket.on("message_from_server", function (data) {
+          let text = data["text"];
+          document.getElementById("chat").innerHTML +=
+            "Server: " + text + "\n\n";
+        });
+      });
+    </script>
+
     <title>Document</title>
   </head>
   <body>
@@ -21,6 +51,16 @@
       </div>
       <div class="content-right">
         <h2>Danh sách sinh viên: {{data|length}}</h2>
+        <textarea
+          id="chat"
+          style="
+            width: 500px;
+            height: 250px;
+            font-size: 18px;
+            font-family: monospace;
+            margin-top: 10px;
+          "
+        ></textarea>
         <div class="student-list">
           {% for item in data %}
           <div class="card">

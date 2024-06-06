@@ -1,26 +1,32 @@
 from flask import Flask
-from tensorflow import keras
+from flask_socketio import *
 
 # from Models.models import db
 from Controllers.video_stream_controllers import video_stream_Controller
 
 
-def create_app():
-    app = Flask(__name__)
+app = Flask(__name__)
 
-    # Create database resource
-    app.config.from_object("config")
+# Create database resource
+app.config.from_object("config")
 
-    # db.init_app(app)
-    # with app.app_context():
-    #   db.create_all()
+socketio = SocketIO(app, logger=True)
 
-    # Register blueprint routes
-    app.register_blueprint(video_stream_Controller, url_prefix="/")
+# db.init_app(app)
+# with app.app_context():
+#   db.create_all()
 
-    return app
+# Register blueprint routes
+app.register_blueprint(video_stream_Controller, url_prefix="/")
+
+
+# Receive a message from the front end HTML
+@socketio.on("send_message")
+def message_received(data):
+    print(data["text"])
+    emit("message_from_server", {"text": "Message received!"})
 
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(port=3000, debug=True)
+    socketio.run(app, port=3000, debug=True)
+    # app.run(port=3000, debug=True)

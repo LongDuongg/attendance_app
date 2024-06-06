@@ -12,3 +12,4 @@ dependencies:
       - opencv-python
       - opencv-python=4.8.0.74
       - flask_sqlalchemy
+      - flask_socketio
