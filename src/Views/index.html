@@ -3,83 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/style.css') }}"
+    />
     <title>Document</title>
   </head>
   <body>
     <div class="page-content">
-      <div class="content-left ">
+      <div class="content-left">
         <h2>Hệ thống điểm danh sinh viên</h2>
-        <img src="{{url_for('video_stream_Controller.video')}}" alt="" class="cameraview">
+        <img
+          src="{{url_for('video_stream_Controller.video')}}"
+          alt=""
+          class="cameraview"
+        />
       </div>
       <div class="content-right">
-        <h2> Danh sách sinh viên: 3</h2>
+        <h2>Danh sách sinh viên: {{data|length}}</h2>
         <div class="student-list">
+          {% for item in data %}
           <div class="card">
             <div class="time">
               <span>
                 Ngày 02 tháng 01 năm 2024
-                <br/>
-                <br/>
+                <br />
+                <br />
                 14:10
               </span>
             </div>
             <div class="info">
-              <b>Dương Phước Long</b> <i>(102190024)</i>
-              <br/>
-              <br/>
-              <b style="background-color: #28a745;">19TCLC_DT1</b>
-              <br/>
-              <br/>
-              <b style="background-color: #08b7cf">Hiền Lương, Thừa Thiên Huế</b>
+              <b>{{item.name}}</b> <i>({{item.id}})</i>
+              <br />
+              <br />
+              <b style="background-color: #28a745">19TCLC_DT1</b>
+              <br />
+              <br />
+              <b style="background-color: #08b7cf">{{item.address}}</b>
             </div>
-            <img src="{{ url_for('static', filename='images/102190024.jpg') }}" alt="" class="img-student">
+            <img
+              src="{{ url_for('static', filename=item.image) }}"
+              alt=""
+              class="img-student"
+            />
           </div>
-
-          <div class="card">
-            <div class="time">
-              <span>
-                Ngày 02 tháng 01 năm 2024
-                <br/>
-                <br/>
-                14:10
-              </span>
-            </div>
-            <div class="info">
-              <b>Nguyễn Hữu Phúc</b> <i>(102210225)</i>
-              <br/>
-              <br/>
-              <b style="background-color: #28a745;">21TCLC_DT3</b>
-              <br/>
-              <br/>
-              <b style="background-color: #08b7cf">Hiền Lương, Thừa Thiên Huế</b>
-            </div>
-            <img src="{{ url_for('static', filename='images/Phuc.jpg') }}" alt="" class="img-student">
-          </div>
-
-          <div class="card">
-            <div class="time">
-              <span>
-                Ngày 02 tháng 01 năm 2024
-                <br/>
-                <br/>
-                14:10
-              </span>
-            </div>
-            <div class="info">
-              <b>Lê Văn Bảo Quốc</b> <i>(102210227)</i>
-              <br/>
-              <br/>
-              <b style="background-color: #28a745;">21TCLC_DT3</b>
-              <br/>
-              <br/>
-              <b style="background-color: #08b7cf">Hiền Lương, Thừa Thiên Huế</b>
-            </div>
-            <img src="{{ url_for('static', filename='images/Quoc.jpg') }}" alt="" class="img-student">
-          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
   </body>
 </html>
-

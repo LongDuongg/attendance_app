@@ -15,3 +15,5 @@ SQLALCHEMY_DATABASE_URI = (
 
 # Turn off the Flask-SQLAlchemy event system and warning
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+TEMPLATES_AUTO_RELOAD = True

@@ -6,6 +6,7 @@ import numpy as np
 
 import tensorflow as tf
 from recognition_models.recognition_models import FACE_DETECTION_MODEL, FACE_CLS_MODEL
+from Models.mock_data import STUDENTS
 
 
 video_stream_Controller = Blueprint(
@@ -77,18 +78,18 @@ def stream():
                     (120, 120),
                 )
 
-                print(type(cropped))
-                print(cropped)
+                # print(type(cropped))
+                # print(cropped)
                 # name = face_recognition.predict(np.expand_dims(resized / 255, 0))
                 # pred_name = name
                 name = face_recognition.predict(cropped, conf=0.8)
                 # name = "long"
                 # print(name[0].probs)
-                print(name[0].probs.top1conf.item())
+                # print(name[0].probs.top1conf.item())
                 pred_name = name[0].probs.top1
                 # conf is of tensor() type so do .item()
                 pred_conf = name[0].probs.top1conf.item()
-                text = NAME_DICT[pred_name] if pred_conf > 0.9 else "Unknown"
+                text = NAME_DICT[pred_name] if pred_conf > 0.5 else "Unknown"
 
                 # Control the text rendered
                 cv2.putText(
@@ -119,7 +120,7 @@ def stream():
 
 @video_stream_Controller.route("/index")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", data=STUDENTS)
 
 
 @video_stream_Controller.route("/video")
