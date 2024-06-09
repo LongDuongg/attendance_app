@@ -45,9 +45,11 @@ def add_attendance(name):
     found_ids = list(df["id"])
 
     if found_student["id"] not in found_ids:
-        with open("Attendance.csv", "a") as f:
+        with open("Attendance.csv", "a", encoding='utf-8') as f:
+            line = f"\n{found_student['name']},{found_student['id']},{found_student['class']},\"{found_student['address']}\",{found_student['image']},{time}"
+            print(line)
             f.write(
-                f"\n{found_student['name']},{found_student['id']},{found_student['class']},\"{found_student['address']}\",{found_student['image']},{time}"
+                line
             )
 
 
@@ -56,8 +58,11 @@ def process_frame(frame):
     size = 450
     img_size = [size, size]
 
-    # frame = frame[50:500, 50:500, :]
-    frame = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
+    #for windows
+    frame = frame[50:500, 50:500, :]
+    
+    #for MacOS
+    # frame = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
 
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     resized = tf.image.resize(rgb, (120, 120))
