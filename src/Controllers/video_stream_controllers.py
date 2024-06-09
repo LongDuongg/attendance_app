@@ -3,6 +3,8 @@ from flask import Blueprint, render_template, Response
 import pickle
 import cv2
 import numpy as np
+import pandas as pd
+from datetime import date
 
 import tensorflow as tf
 from recognition_models.recognition_models import FACE_DETECTION_MODEL, FACE_CLS_MODEL
@@ -24,11 +26,29 @@ with open("src/ResultsMap.pkl", "rb") as file:
 
 
 NAME_DICT = {0: "Long", 1: "Phuc", 2: "Quoc"}
+UNKNOWN = "Unknown"
 
 
 # load model
 face_tracker = FACE_DETECTION_MODEL
 face_recognition = FACE_CLS_MODEL
+
+
+def add_attendance(name):
+    if name == UNKNOWN:
+        return
+
+    found_student = [s for s in STUDENTS if s["id_name"] == name][0]
+    time = date.today().strftime("%d/%m/%Y %H:%M:%S")
+
+    df = pd.read_csv("Attendance.csv", dtype=str, encoding="utf-8")
+    found_ids = list(df["id"])
+
+    if found_student["id"] not in found_ids:
+        with open("Attendance.csv", "a") as f:
+            f.write(
+                f"\n{found_student['name']},{found_student['id']},{found_student['class']},{found_student['image']},{time}"
+            )
 
 
 def process_frame(frame):
@@ -74,14 +94,17 @@ def process_frame(frame):
             # print(cropped)
             # name = face_recognition.predict(np.expand_dims(resized / 255, 0))
             # pred_name = name
-            name = face_recognition.predict(cropped, conf=0.8)
+            name = face_recognition.predict(cropped)
             # name = "long"
             # print(name[0].probs)
             # print(name[0].probs.top1conf.item())
             pred_name = name[0].probs.top1
             # conf is of tensor() type so do .item()
             pred_conf = name[0].probs.top1conf.item()
-            text = NAME_DICT[pred_name] if pred_conf > 0.5 else "Unknown"
+            # text = NAME_DICT[pred_name] if pred_conf > 0.5 else UNKNOWN
+            text = NAME_DICT[pred_name]
+
+            add_attendance(text)
 
             # Control the text rendered
             cv2.putText(
@@ -119,7 +142,7 @@ def stream():
             break
 
         # process every 5 frames
-        if counter % 5 == 0:
+        if counter % 10 == 0:
             p_frame = process_frame(frame)
             if p_frame:
                 yield (

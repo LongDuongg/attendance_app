@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_socketio import *
+import pandas as pd
 
 # from Models.models import db
 from Controllers.video_stream_controllers import video_stream_controller
@@ -23,8 +24,11 @@ app.register_blueprint(video_stream_controller, url_prefix="/")
 # Receive a message from the front end HTML
 @socketio.on("send_message")
 def message_received(data):
-    print(data["text"])
-    emit("message_from_server", {"text": "Message received!"})
+    try:
+        df = pd.read_csv(f"Attendance.csv", dtype=str, encoding="utf-8")
+        emit("message_from_server", {"text": "Message received!", "data": df.to_json()})
+    except Exception as e:
+        emit("message_from_server", {"text": "error!"})
 
 
 if __name__ == "__main__":
