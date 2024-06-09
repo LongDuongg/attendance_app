@@ -5,3 +5,5 @@ pymysql
 mysql-connector-python
 tensorflow==2.15
 opencv-python==4.8.0.74
+pandas
+ultralytics 
