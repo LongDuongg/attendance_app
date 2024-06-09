@@ -17,23 +17,59 @@
       src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"
     ></script>
 
-    <!-- Script to handle socket.io -->
     <script>
       let socket;
       $(document).ready(function () {
-        // The http vs. https is important. Use http for localhost!
         socket = io.connect("http://" + document.domain + ":" + location.port);
 
         const interval = setInterval(() => {
-          socket.emit("send_message", { "text": "aaa" });
+          socket.emit("request_attendance_list");
         }, 1000);
 
-        // Message received from server
-        socket.on("message_from_server", function (data) {
-          let text = data["text"];
-          console.log(data["data"]);
-          document.getElementById("chat").innerHTML +=
-            "Server: " + text + "\n\n";
+        const renderCard = (student) => {
+          return `
+            <div class="card">
+            <div class="time">
+              <span>
+                ${student.time}
+              </span>
+            </div>
+            <div class="info">
+              <b>${student.name}</b> <i>(${student.id})</i>
+              <br />
+              <br />
+              <b style="background-color: #28a745">${student.class}</b>
+              <br />
+              <br />
+              <b style="background-color: #08b7cf">${student.address}</b>
+            </div>
+            <img
+              src="static/${student.image}"
+              alt=""
+              class="img-student"
+            />
+          </div>
+          `;
+        };
+
+        socket.on("return_attendance_list", function (data) {
+          const attendanceList = JSON.parse(data["data"]);
+          console.log(attendanceList);
+
+          const renderedHtml = attendanceList
+            .map((student) => renderCard(student))
+            .join();
+
+          const listEL = document.getElementsByClassName("student-list")?.[0];
+          const countEL = document.getElementsByClassName("list-count")?.[0];
+
+          if (listEL) {
+            listEL.innerHTML = renderedHtml;
+          }
+
+          if (countEL) {
+            countEL.innerHTML = attendanceList?.length || 0;
+          }
         });
       });
     </script>
@@ -51,19 +87,9 @@
         />
       </div>
       <div class="content-right">
-        <h2>Danh sách sinh viên: {{data|length}}</h2>
-        <textarea
-          id="chat"
-          style="
-            width: 500px;
-            height: 250px;
-            font-size: 18px;
-            font-family: monospace;
-            margin-top: 10px;
-          "
-        ></textarea>
+        <h2>Danh sách sinh viên: <span class="list-count">0</span></h2>
         <div class="student-list">
-          {% for item in data %}
+          <!-- {% for item in data %}
           <div class="card">
             <div class="time">
               <span>
@@ -88,7 +114,7 @@
               class="img-student"
             />
           </div>
-          {% endfor %}
+          {% endfor %} -->
         </div>
       </div>
     </div>

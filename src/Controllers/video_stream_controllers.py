@@ -47,7 +47,7 @@ def add_attendance(name):
     if found_student["id"] not in found_ids:
         with open("Attendance.csv", "a") as f:
             f.write(
-                f"\n{found_student['name']},{found_student['id']},{found_student['class']},{found_student['image']},{time}"
+                f"\n{found_student['name']},{found_student['id']},{found_student['class']},\"{found_student['address']}\",{found_student['image']},{time}"
             )
 
 
