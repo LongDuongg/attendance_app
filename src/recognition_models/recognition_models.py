@@ -6,6 +6,7 @@ import os
 cwd = os.getcwd()
 print(cwd)
 
+FACE_RECOGNITION_MODEL = load_model("src/recognition_models/Face_Recognition.keras")
 
 FACE_DETECTION_MODEL = load_model("src/recognition_models/Face_Detection.h5")
 
