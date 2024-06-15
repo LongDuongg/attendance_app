@@ -7,7 +7,7 @@ import pandas as pd
 from datetime import date
 
 import tensorflow as tf
-from recognition_models.recognition_models import FACE_DETECTION_MODEL, FACE_CLS_MODEL, FACE_RECOGNITION_MODEL
+from recognition_models.recognition_models import FACE_DETECTION_MODEL
 from Models.mock_data import STUDENTS
 
 
@@ -32,7 +32,7 @@ UNKNOWN = "Unknown"
 # load model
 face_tracker = FACE_DETECTION_MODEL
 # face_recognition = FACE_CLS_MODEL
-face_recognition = FACE_RECOGNITION_MODEL
+# face_recognition = FACE_RECOGNITION_MODEL
 
 
 def add_attendance(name):
