@@ -11,5 +11,5 @@ print(cwd)
 FACE_DETECTION_MODEL = load_model("src/recognition_models/Quoc.h5")
 # FACE_DETECTION_MODEL = YOLO("src/recognition_models/yolov8-face.pt")
 
-# FACE_CLS_MODEL = load_model("src/recognition_models/Face_Recognition_new.keras")
-FACE_CLS_MODEL = YOLO("src/recognition_models/yolov8-face-cls.pt")
+FACE_CLS_MODEL = load_model("src/recognition_models/Face_Recognition_new.keras")
+# FACE_CLS_MODEL = YOLO("src/recognition_models/yolov8-face-cls.pt")
