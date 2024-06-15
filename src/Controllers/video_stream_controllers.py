@@ -114,9 +114,11 @@ def process_frame(frame):
                 (crop_size, crop_size),
             )
 
-            name = face_recognition.predict(np.expand_dims(cropped / 255, 0))
-            print("pred", name)
-            pred_name = np.argmax(name)
+            result = face_recognition.predict(np.expand_dims(cropped / 255, 0), verbose=0)
+            # print("pred", result)
+            pred_conf = np.max(result)
+            pred_name = np.argmax(result)
+            print(pred_name, pred_conf)
 
             # name = face_recognition.predict(cropped)
             # name = "long"
@@ -125,8 +127,9 @@ def process_frame(frame):
             # pred_name = name[0].probs.top1
             # conf is of tensor() type so do .item()
             # pred_conf = name[0].probs.top1conf.item()
-            # text = NAME_DICT[pred_name] if pred_conf > 0.5 else UNKNOWN
-            text = NAME_DICT[pred_name]
+            
+            text = NAME_DICT[pred_name] if pred_conf > 0.6 else UNKNOWN
+            # text = NAME_DICT[pred_name]
 
             add_attendance(text)
 
@@ -165,7 +168,7 @@ def stream():
             break
 
         # process every 5 frames
-        if counter % 10 == 0:
+        if counter % 5 == 0:
             p_frame = process_frame(frame)
             if p_frame:
                 yield (
