@@ -46,31 +46,49 @@ def add_attendance(name):
     found_ids = list(df["id"])
 
     if found_student["id"] not in found_ids:
-        with open("Attendance.csv", "a", encoding='utf-8') as f:
+        with open("Attendance.csv", "a", encoding="utf-8") as f:
             line = f"\n{found_student['name']},{found_student['id']},{found_student['class']},\"{found_student['address']}\",{found_student['image']},{time}"
             print(line)
-            f.write(
-                line
-            )
+            f.write(line)
+
+
+def crop_square(img, size, interpolation=cv2.INTER_AREA):
+    h, w = img.shape[:2]
+    min_size = np.amin([h, w])
+
+    # Centralize and crop
+    crop_img = img[
+        int(h / 2 - min_size / 2) : int(h / 2 + min_size / 2),
+        int(w / 2 - min_size / 2) : int(w / 2 + min_size / 2),
+    ]
+    resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
+
+    return resized
 
 
 def process_frame(frame):
     scale = 0.25
     size = 450
+    crop_size = 120
     img_size = [size, size]
 
-    #for windows
-    frame = frame[50:500, 50:500, :]
-    
-    #for MacOS
+    # for windows
+    # frame = frame[50:500, 50:500, :]
+
+    # for MacOS
     # frame = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
 
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    resized = tf.image.resize(rgb, (120, 120))
+    # crop and resize frame to size 450
+    frame = crop_square(frame, size)
 
+    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    resized = tf.image.resize(rgb, (crop_size, crop_size))
+
+    # np.expand_dims(img_tensor, axis=0): (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
+    # resized / 255: imshow expects values in the range [0, 1]
     yhat = face_tracker.predict(np.expand_dims(resized / 255, 0))
     sample_coords = yhat[1][0]
-    print(yhat)
+    # print(yhat)
 
     if yhat[0] > 0.5:
         # Control the main rectangle
@@ -93,20 +111,20 @@ def process_frame(frame):
                     .astype(int) : np.multiply(sample_coords[2], size)
                     .astype(int),
                 ],
-                (120, 120),
+                (crop_size, crop_size),
             )
 
-            # print(type(cropped))
-            # print(cropped)
-            # name = face_recognition.predict(np.expand_dims(resized / 255, 0))
-            # pred_name = name
-            name = face_recognition.predict(cropped)
+            name = face_recognition.predict(np.expand_dims(cropped / 255, 0))
+            print("pred", name)
+            pred_name = np.argmax(name)
+
+            # name = face_recognition.predict(cropped)
             # name = "long"
             # print(name[0].probs)
             # print(name[0].probs.top1conf.item())
-            pred_name = name[0].probs.top1
+            # pred_name = name[0].probs.top1
             # conf is of tensor() type so do .item()
-            pred_conf = name[0].probs.top1conf.item()
+            # pred_conf = name[0].probs.top1conf.item()
             # text = NAME_DICT[pred_name] if pred_conf > 0.5 else UNKNOWN
             text = NAME_DICT[pred_name]
 
@@ -115,11 +133,10 @@ def process_frame(frame):
             # Control the text rendered
             cv2.putText(
                 frame,
-                # result_map[np.argmax(pred_name)],
                 text,
                 tuple(
                     np.add(
-                        np.multiply(sample_coords[:2], img_size).astype(int),
+                        np.multiply(sample_coords[:2], [size, size]).astype(int),
                         [0, -5],
                     )
                 ),
@@ -157,6 +174,11 @@ def stream():
                 )
 
         counter += 1
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+
+    vid.release()
 
 
 @video_stream_controller.route("/index")
