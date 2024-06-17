@@ -16,7 +16,7 @@ def load_images_from_folder(folder_path):
     return images
 
 
-def test_yolov8_model():
+def test_cls_yolov8_model():
     images = load_images_from_folder("src/recognition_models/test_images")
 
     results = FACE_CLS_MODEL.predict(images)
@@ -25,20 +25,28 @@ def test_yolov8_model():
         print(result)
 
 
+def test_detect_yolov8_model():
+    images = load_images_from_folder("src/recognition_models/test_detection_images")
 
-def test_long_model():
+    results = FACE_DETECTION_MODEL.predict(images, save=False)
+
+    for result in results:
+        print(result)
+
+
+def test_cls_long_model():
     images = load_images_from_folder("src/recognition_models/test_images")
 
     for img in images:
-        img = cv2.resize(img, (120,120))
-        img = np.expand_dims(img,axis=0)
-        
-        result = FACE_CLS_MODEL.predict(img) 
-        
-        print('####'*10)
+        img = cv2.resize(img, (120, 120))
+        img = np.expand_dims(img, axis=0)
+
+        result = FACE_CLS_MODEL.predict(img)
+
+        print("####" * 10)
         print(result)
-        print('Prediction is: ', np.argmax(result))
+        print("Prediction is: ", np.argmax(result))
 
 
-
-test_long_model()
+# test_cls_long_model()
+test_detect_yolov8_model()
