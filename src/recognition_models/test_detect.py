@@ -105,5 +105,5 @@ def accessCamera(IP_Stream):
     return cv2.VideoCapture(IP_Stream)
 
 
-video_stream = accessCamera(0)
-performFaceDetectionYolov8(video_stream)
+# video_stream = accessCamera(0)
+# performFaceDetectionYolov8(video_stream)
