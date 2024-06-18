@@ -6,12 +6,13 @@ import os
 cwd = os.getcwd()
 print(cwd)
 
-
+# CNN and SSD
 # FACE_DETECTION_MODEL = load_model("src/recognition_models/Quoc.h5")
 # FACE_CLS_MODEL = load_model("src/recognition_models/Face_Recognition.keras") # windows
 # FACE_CLS_MODEL = load_model(
 #     "src/recognition_models/Face_Recognition_new.keras"
 # )  # macos
 
+# Yolo
 FACE_DETECTION_MODEL = YOLO("src/recognition_models/yolov8-face.pt")
 FACE_CLS_MODEL = YOLO("src/recognition_models/yolov8-face-cls.pt")
