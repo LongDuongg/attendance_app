@@ -3,7 +3,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from recognition_models import FACE_DETECTION_MODEL, FACE_CLS_MODEL
-from test_detect import crop_square
+from utils import crop_square
 from ultralytics.utils.plotting import Annotator
 
 NAME_DICT = {0: "Long", 1: "Phuc", 2: "Quoc"}
@@ -13,14 +13,13 @@ def performFaceRecognitionYolov8(vid):
     facetracker = FACE_DETECTION_MODEL
     face_recognition = FACE_CLS_MODEL
 
-    size = 450
-    img_size = [size, size]
+    size = 640
 
     while True:
         result, frame = vid.read()
         print("hereee")
 
-        # crop and resize frame to size 450
+        # crop and resize frame to size 640
         frame = crop_square(frame, size)
 
         if result is False:
@@ -33,10 +32,10 @@ def performFaceRecognitionYolov8(vid):
             boxes = r.boxes
 
             for box in boxes:
-                conf = box.conf[0].item()
-                print(conf)
+                detect_conf = box.conf[0].item()
+                print(detect_conf)
 
-                if conf > 0.1:
+                if detect_conf > 0.1:
                     b = box.xyxy[
                         0
                     ]  # get box coordinates in (left, top, right, bottom) format
@@ -47,10 +46,13 @@ def performFaceRecognitionYolov8(vid):
                     cropped = frame[int(y1) : int(y2), int(x1) : int(x2)]
 
                     pred = face_recognition.predict(cropped, verbose=False)
-                    pred_conf = pred[0].probs.top1
-                    pred_name = pred[0].probs.top1conf.item()
-                    # print("aaa", pred_name, pred_conf)
-                    annotator.box_label(b, NAME_DICT[int(pred_name)])
+                    pred_name = pred[0].probs.top1
+                    pred_conf = pred[0].probs.top1conf.item()
+                    print("aaa", pred_name, pred_conf)
+                    text_name = (
+                        NAME_DICT[int(pred_name)] if pred_conf > 0.6 else "Unknown"
+                    )
+                    annotator.box_label(b, text_name)
 
         frame = annotator.result()
 

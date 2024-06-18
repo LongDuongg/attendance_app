@@ -3,21 +3,8 @@ import os
 import numpy as np
 import tensorflow as tf
 from recognition_models import FACE_DETECTION_MODEL
+from utils import crop_square
 from ultralytics.utils.plotting import Annotator
-
-
-def crop_square(img, size, interpolation=cv2.INTER_AREA):
-    h, w = img.shape[:2]
-    min_size = np.amin([h, w])
-
-    # Centralize and crop
-    crop_img = img[
-        int(h / 2 - min_size / 2) : int(h / 2 + min_size / 2),
-        int(w / 2 - min_size / 2) : int(w / 2 + min_size / 2),
-    ]
-    resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
-
-    return resized
 
 
 def performFaceDetectionYolov8(vid):
