@@ -56,7 +56,7 @@ def add_attendance(name):
 
 
 def process_frame_yolov8(frame):
-    size = 640
+    size = 480
     # crop and resize frame to size 640
     frame = crop_square(frame, size)
 
@@ -85,6 +85,9 @@ def process_frame_yolov8(frame):
                 pred_conf = pred[0].probs.top1conf.item()
                 print(pred_name, pred_conf)
                 text = NAME_DICT[int(pred_name)] if pred_conf > 0.6 else "Unknown"
+                
+                add_attendance(text)
+                
                 annotator.box_label(b, text)
 
     frame = annotator.result()
